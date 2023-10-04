@@ -1,6 +1,16 @@
+import os
 from pydantic_settings import BaseSettings
+from functools import lru_cache
 
+# reducir el tiempo de ejecución de la función mediante el uso de la técnica de memorización.
+@lru_cache
+def get_env_filename():
+    runtime_env = os.getenv("ENV")
+    return f".env.{runtime_env}" if runtime_env else ".env"
 
+class Config:
+        env_file = get_env_filename()
+        env_file_encoding = "utf-8"
 
 class EnvironmentSettings(BaseSettings):
     API_VERSION: str
@@ -26,3 +36,10 @@ class EnvironmentSettings(BaseSettings):
     EMAIL_USE_TLS: bool
     FRONTEND_HOST: str
     RECLUTAMIENTO_HOST: str
+
+
+@lru_cache
+def get_environment_variables():
+    return EnvironmentSettings()
+
+    
